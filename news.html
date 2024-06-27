@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: "Rubik", sans-serif;
+    }
+    body {
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-areas:
+        "nav"
+        "main"
+        "footer";
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+    }
+    .nav {
+      grid-area: nav;
+      background: #333;
+      color: white;
+      padding: 10px;
+    }
+    .nav-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+    }
+    .nav-list li {
+      margin: 0 10px;
+    }
+    .nav-list a {
+      color: white;
+      text-decoration: none;
+    }
+    .main {
+      grid-area: main;
+      padding: 20px;
+    }
+    .footer {
+      grid-area: footer;
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+    .news-category {
+      margin-bottom: 20px;
+    }
+    .news-item {
+      display: flex;
+      margin-bottom: 10px;
+      background: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .news-item img {
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+    .news-item h3 {
+      font-size: 18px;
+      margin: 0 0 10px;
+    }
+    .news-item p {
+      margin: 0;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .pagination button {
+      margin: 0 5px;
+      padding: 8px 12px;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .pagination button.active {
+      background-color: #1e40af;
+    }
+    .pagination button:hover {
+      background-color: #3182ce;
+    }
+    .category-menu {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .category-menu a {
+      margin: 0 10px;
+      padding: 10px;
+      background-color: #333;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    .category-menu a.active {
+      background-color: #3b82f6;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <nav class="nav">
+      <ul class="nav-list">
+        <li><a href="joke.html">Joke</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="weather.html">Weather</a></li>
+      </ul>
+    </nav>
+    <main class="main">
+      <div class="category-menu">
+        <a href="#" data-category="sports" class="active">Sports</a>
+        <a href="#" data-category="politics">Indian Politics</a>
+        <a href="#" data-category="general">International Affairs</a>
+      </div>
+      <div class="news-category">
+        <h2 id="category-title">Sports</h2>
+        <div id="news-container"></div>
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </main>
+    <footer class="footer">Footer</footer>
+  </div>
+
+  <script>
+    const apiKey = "4e77aa91027549b5b18d0a1e49e58b71";
+    const pageSize = 5;
+    let currentPage = 1;
+    let totalPages = 1;
+
+    const fetchNews = (category, containerId, page = 1) => {
+      const timestamp = new Date().getTime();
+      let url = `https://newsapi.org/v2/top-headlines?country=us&pageSize=${pageSize}&apiKey=${apiKey}&page=${page}&_=${timestamp}`;
+
+      if (category === 'politics') {
+        url = `https://newsapi.org/v2/top-headlines?country=in&category=${category}&pageSize=${pageSize}&apiKey=${apiKey}&page=${page}&_=${timestamp}`;
+      } else if (category !== 'all') {
+        url += `&category=${category}`;
+      }
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const container = document.getElementById(containerId);
+          container.innerHTML = '';
+          data.articles.forEach(article => {
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item';
+            newsItem.innerHTML = `
+              <img src="${article.urlToImage || 'https://via.placeholder.com/150x100'}" alt="News Image">
+              <div>
+                <h3>${article.title}</h3>
+                <p>${article.description || 'No description available.'}</p>
+              </div>
+            `;
+            container.appendChild(newsItem);
+          });
+
+          // Update pagination
+          totalPages = Math.ceil(data.totalResults / pageSize);
+          updatePagination();
+        })
+        .catch(error => console.error('Error fetching news:', error));
+    };
+
+    const updateNews = (category) => {
+      const categoryTitle = category.replace('-', ' ').toUpperCase();
+      document.getElementById('category-title').innerText = category === 'all' ? 'All News' : categoryTitle;
+      fetchNews(category, 'news-container');
+    };
+
+    const updatePagination = () => {
+      const paginationContainer = document.getElementById('pagination');
+      paginationContainer.innerHTML = '';
+
+      if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+          const pageButton = document.createElement('button');
+          pageButton.textContent = i;
+          pageButton.addEventListener('click', () => {
+            const activeCategory = document.querySelector('.category-menu .active').dataset.category;
+            currentPage = i;
+            fetchNews(activeCategory, 'news-container', currentPage);
+          });
+          if (i === currentPage) {
+            pageButton.classList.add('active');
+          }
+          paginationContainer.appendChild(pageButton);
+        }
+      }
+    };
+
+    document.querySelectorAll('.category-menu a').forEach(menuItem => {
+      menuItem.addEventListener('click', (event) => {
+        event.preventDefault();
+        document.querySelectorAll('.category-menu a').forEach(item => item.classList.remove('active'));
+        menuItem.classList.add('active');
+        currentPage = 1;
+        updateNews(menuItem.dataset.category);
+      });
+    });
+
+    updateNews('sports');
+  </script>
+</body>
+</html>

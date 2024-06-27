@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #333;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .header .title {
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .nav-list {
+      list-style: none;
+      display: flex;
+    }
+
+    .nav-list li {
+      margin-left: 20px;
+    }
+
+    .nav-list a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .main {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1f2933;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .header .title {
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 28em;
+      background: white;
+      border-radius: 0.6em;
+      box-shadow: 0 1.8em 3.7em rgba(3, 46, 87, 0.2);
+      overflow: hidden;
+    }
+
+    .container {
+      background: #62b8f5;
+      padding: 3em 1.8em;
+      text-align: center;
+    }
+
+    .search-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2em;
+    }
+
+    .search-container input,
+    .search-container button {
+      padding: 0.7em;
+      outline: none;
+      font-size: 1em;
+      border: none;
+      border-radius: 0.3em;
+    }
+
+    .search-container input {
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      margin-right: 1em;
+      background-color: #ffffff10;
+      color: white;
+    }
+
+    .search-container input::placeholder {
+      color: #e5e5e5;
+    }
+
+    .search-container input:focus {
+      border-color: white;
+    }
+
+    .search-container button {
+      background-color: white;
+      color: #4475ef;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #result h2 {
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-weight: 600;
+      margin: 1.25em 0;
+    }
+
+    .weather,
+    .desc {
+      color: #e5e5e5;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 0.9em;
+      font-weight: 500;
+      line-height: 2em;
+    }
+
+    .weather {
+      margin-top: -0.7em;
+    }
+
+    #result img {
+      margin: 0.6em 0 0 0;
+      width: 6.2em;
+      filter: drop-shadow(0 1.8em 3.7em rgba(3, 46, 87, 0.2));
+    }
+
+    #result h1 {
+      font-size: 4em;
+      margin: 0.3em 0 0.7em 0;
+      line-height: 0;
+      font-weight: 400;
+      color: white;
+    }
+
+    .temp-container {
+      display: flex;
+      justify-content: center;
+    }
+
+    .temp-container div {
+      padding: 0.3em 1em;
+    }
+
+    .temp-container div:first-child {
+      border-right: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .temp-container .title {
+      font-weight: 600;
+      color: white;
+    }
+
+    .temp-container .temp {
+      font-weight: 300;
+      color: #e5e5e5;
+    }
+
+    .msg {
+      margin-top: 1.8em;
+      color: white;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1f2933;
+      padding: 10px 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+    .header .title {
+      color: #ffffff;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .footer {
+      background-color: #1f2933;
+      color: #ffffff;
+      text-align: center;
+      padding: 10px 0;
+    }
+    @media screen and (max-width: 450px) {
+      .wrapper {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="grid-container">
+    <header class="header">
+      <div class="title">Weather App</div>
+      <nav class="nav">
+        <ul class="nav-list">
+          <li><a href="joke.html">Joke</a></li>
+          <li><a href="news.html">News</a></li>
+          <li><a href="weather.html">Weather</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main class="main">
+      <div class="wrapper">
+        <div class="container">
+          <div class="search-container">
+            <input type="text" placeholder="Enter a city name" id="city" value="mumbai" />
+            <button id="search-btn">Search</button>
+          </div>
+          <div id="result"></div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">Footer</footer>
+  </div>
+
+  <script>
+    // Assign the copied API key to the 'key' variable
+    const key = "85e469f1b8c5180d1254c76340712d3a";
+    let result = document.getElementById("result");
+    let searchBtn = document.getElementById("search-btn");
+    let cityRef = document.getElementById("city");
+
+    // Function to fetch weather details from api and display them
+    let getWeather = () => {
+      let cityValue = cityRef.value;
+      // If input field is empty
+      if (cityValue.length == 0) {
+        result.innerHTML = `<h3 class="msg">Please enter a city name</h3>`;
+      }
+      // If input field is NOT empty
+      else {
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityValue}&appid=${key}&units=metric`;
+        // Clear the input field
+        cityRef.value = "";
+        fetch(url)
+          .then((resp) => resp.json())
+          // If city name is valid
+          .then((data) => {
+            console.log(data);
+            result.innerHTML = `
+              <h2>${data.name}</h2>
+              <h4 class="weather">${data.weather[0].main}</h4>
+              <h4 class="desc">${data.weather[0].description}</h4>
+              <img src="https://openweathermap.org/img/w/${data.weather[0].icon}.png">
+              <h1>${data.main.temp} &#176;</h1>
+              <div class="temp-container">
+                <div>
+                  <h4 class="title">min</h4>
+                  <h4 class="temp">${data.main.temp_min}&#176;</h4>
+                </div>
+                <div>
+                  <h4 class="title">max</h4>
+                  <h4 class="temp">${data.main.temp_max}&#176;</h4>
+                </div>
+              </div>
+            `;
+          })
+          // If city name is NOT valid
+          .catch(() => {
+            result.innerHTML = `<h3 class="msg">City not found</h3>`;
+          });
+      }
+    };
+
+    searchBtn.addEventListener("click", getWeather);
+    window.addEventListener("load", getWeather);
+  </script>
+</body>
+
+</html>
